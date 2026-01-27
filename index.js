@@ -3,12 +3,12 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 
-// Get inputs from GitHub Actions
+// 1. Get inputs from GitHub Actions
 const USERNAME = core.getInput('username');
 const TOKEN = core.getInput('token');
 const CHAR_TYPE = core.getInput('character') || 'Juno';
 
-// Rank thresholds definition
+// 2. Rank thresholds definition
 const RANK_THRESHOLDS = [
   { score: 2000, grade: 'S+', color: '#ffd700' }, 
   { score: 1000, grade: 'S',  color: '#00e676' }, 
@@ -18,7 +18,7 @@ const RANK_THRESHOLDS = [
   { score: 0,    grade: 'D',  color: '#607d8b' }, 
 ];
 
-// Convert image file to Base64 string
+// 3. Convert image file to Base64 string
 function encodeImage(filePath) {
   try {
     const bitmap = fs.readFileSync(filePath);
@@ -26,11 +26,12 @@ function encodeImage(filePath) {
     return `data:image/${ext};base64,${bitmap.toString('base64')}`;
   } catch (err) {
     console.error(`Error: Image not found at ${filePath}`);
+    // Return 1x1 transparent pixel on error
     return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
   }
 }
 
-// Fetch user statistics from GitHub GraphQL API
+// 4. Fetch user statistics from GitHub GraphQL API
 async function fetchGitHubStats() {
   const query = `
     query {
@@ -64,22 +65,32 @@ async function fetchGitHubStats() {
       { headers: { Authorization: `bearer ${TOKEN}` } }
     );
     
-    if (response.data.errors) throw new Error(JSON.stringify(response.data.errors));
+    if (response.data.errors) {
+      throw new Error(JSON.stringify(response.data.errors));
+    }
+
     const data = response.data.data.user;
 
+    // Calculate total stars
     const totalStars = data.repositories.nodes.reduce((acc, repo) => acc + repo.stargazerCount, 0);
     
+    // Calculate years on GitHub
     const joinedDate = new Date(data.createdAt);
     const today = new Date();
     const yearsOnGitHub = today.getFullYear() - joinedDate.getFullYear();
 
+    // Calculate current streak
     const weeks = data.contributionsCollection.contributionCalendar.weeks;
     const days = weeks.flatMap(w => w.contributionDays);
     let streak = 0;
+    
+    // Iterate backwards from the last day
     for (let i = days.length - 1; i >= 0; i--) {
       if (days[i].contributionCount > 0) {
         streak++;
       } else {
+        // If today (or the last fetched day) has 0 commits, check yesterday to maintain streak logic
+        // But if we encounter a 0 in the past, streak breaks.
         if (i === days.length - 1) continue; 
         break; 
       }
@@ -99,7 +110,7 @@ async function fetchGitHubStats() {
   }
 }
 
-// Calculate rank grade based on score
+// 5. Calculate rank grade based on score
 function calculateRank(stats) {
   const score = stats.commits; 
   const rank = RANK_THRESHOLDS.find(r => score >= r.score) || RANK_THRESHOLDS[RANK_THRESHOLDS.length - 1];
@@ -115,13 +126,15 @@ function calculateRank(stats) {
   return { grade: rank.grade, color: rank.color, percentage };
 }
 
-// Main execution function
+// 6. Main execution function
 async function main() {
   try {
     const stats = await fetchGitHubStats();
     const rankInfo = calculateRank(stats);
     
-    console.log(`Stats updated for ${stats.name}`);
+    // Timestamp for force update
+    const now = new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
+    console.log(`Stats updated for ${stats.name} at ${now}`);
 
     const bgBase64 = encodeImage(path.join(__dirname, 'assets', 'BG.png'));
     const charBase64 = encodeImage(path.join(__dirname, 'assets', `char_${CHAR_TYPE}.png`));
@@ -150,7 +163,7 @@ async function main() {
       <text x="320" y="70" class="value">${stats.commits}</text>
 
       <text x="180" y="95" class="label">Current Streak</text>
-      <text x="320" y="95" class="value">${stats.streak} days</text>
+      <text x="320" y="95" class="value">${stats.streak} days 🔥</text>
 
       <text x="180" y="120" class="label">Total Stars</text>
       <text x="320" y="120" class="value">${stats.stars}</text>
@@ -171,6 +184,7 @@ async function main() {
     </svg>
     `;
 
+    // Save path handling (GitHub Workspace vs Local)
     const outputPath = process.env.GITHUB_WORKSPACE 
       ? path.join(process.env.GITHUB_WORKSPACE, 'stats.svg') 
       : 'stats.svg';
