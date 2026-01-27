@@ -1,4 +1,5 @@
 name: 'Pixel Art Stats Card'
+
 description: 'Generates a pixel art GitHub stats card with a character.'
 author: 'Bawky'
 inputs:

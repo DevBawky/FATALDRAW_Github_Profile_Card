@@ -38,7 +38,7 @@ async function fetchGitHubStats() {
         name
         createdAt
         repositories(first: 100, ownerAffiliations: OWNER, isFork: false) {
-          nodes { stargazersCount }
+          nodes { stargazerCount }
         }
         contributionsCollection {
           totalCommitContributions
@@ -67,7 +67,7 @@ async function fetchGitHubStats() {
     if (response.data.errors) throw new Error(JSON.stringify(response.data.errors));
     const data = response.data.data.user;
 
-    const totalStars = data.repositories.nodes.reduce((acc, repo) => acc + repo.stargazersCount, 0);
+    const totalStars = data.repositories.nodes.reduce((acc, repo) => acc + repo.stargazerCount, 0);
     
     const joinedDate = new Date(data.createdAt);
     const today = new Date();
