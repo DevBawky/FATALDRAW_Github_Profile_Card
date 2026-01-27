@@ -3,12 +3,12 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 
-// 1. Get inputs from GitHub Actions
+// 1. Get inputs
 const USERNAME = core.getInput('username');
 const TOKEN = core.getInput('token');
 const CHAR_TYPE = core.getInput('character') || 'Juno';
 
-// 2. Rank thresholds definition
+// 2. Rank thresholds
 const RANK_THRESHOLDS = [
   { score: 2000, grade: 'S+', color: '#ffd700' }, 
   { score: 1000, grade: 'S',  color: '#00e676' }, 
@@ -18,7 +18,6 @@ const RANK_THRESHOLDS = [
   { score: 0,    grade: 'D',  color: '#607d8b' }, 
 ];
 
-// 3. Convert image file to Base64 string
 function encodeImage(filePath) {
   try {
     const bitmap = fs.readFileSync(filePath);
@@ -26,12 +25,11 @@ function encodeImage(filePath) {
     return `data:image/${ext};base64,${bitmap.toString('base64')}`;
   } catch (err) {
     console.error(`Error: Image not found at ${filePath}`);
-    // Return 1x1 transparent pixel on error
     return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
   }
 }
 
-// 4. Fetch user statistics from GitHub GraphQL API
+// 4. Fetch user statistics
 async function fetchGitHubStats() {
   const query = `
     query {
@@ -59,6 +57,8 @@ async function fetchGitHubStats() {
   `;
 
   try {
+    console.log(`Attempting to fetch stats for user: ${USERNAME}`);
+    
     const response = await axios.post(
       'https://api.github.com/graphql',
       { query },
@@ -66,31 +66,30 @@ async function fetchGitHubStats() {
     );
     
     if (response.data.errors) {
+      console.error("API Error:", JSON.stringify(response.data.errors, null, 2));
       throw new Error(JSON.stringify(response.data.errors));
     }
 
     const data = response.data.data.user;
 
-    // Calculate total stars
+    console.log("========================================");
+    console.log("DEBUG: RAW API DATA FROM GITHUB");
+    console.log(JSON.stringify(data, null, 2));
+    console.log("========================================");
+
     const totalStars = data.repositories.nodes.reduce((acc, repo) => acc + repo.stargazerCount, 0);
-    
-    // Calculate years on GitHub
     const joinedDate = new Date(data.createdAt);
     const today = new Date();
     const yearsOnGitHub = today.getFullYear() - joinedDate.getFullYear();
 
-    // Calculate current streak
     const weeks = data.contributionsCollection.contributionCalendar.weeks;
     const days = weeks.flatMap(w => w.contributionDays);
     let streak = 0;
     
-    // Iterate backwards from the last day
     for (let i = days.length - 1; i >= 0; i--) {
       if (days[i].contributionCount > 0) {
         streak++;
       } else {
-        // If today (or the last fetched day) has 0 commits, check yesterday to maintain streak logic
-        // But if we encounter a 0 in the past, streak breaks.
         if (i === days.length - 1) continue; 
         break; 
       }
@@ -105,16 +104,14 @@ async function fetchGitHubStats() {
       years: yearsOnGitHub
     };
   } catch (error) {
-    console.error(error);
+    console.error("Fetch Error Details:", error.message);
     throw new Error('Failed to fetch GitHub stats');
   }
 }
 
-// 5. Calculate rank grade based on score
 function calculateRank(stats) {
   const score = stats.commits; 
   const rank = RANK_THRESHOLDS.find(r => score >= r.score) || RANK_THRESHOLDS[RANK_THRESHOLDS.length - 1];
-  
   let percentage = 100;
   const nextRank = RANK_THRESHOLDS[RANK_THRESHOLDS.indexOf(rank) - 1];
   if (nextRank) {
@@ -122,23 +119,19 @@ function calculateRank(stats) {
     const current = score - rank.score;
     percentage = Math.min(100, Math.max(0, (current / range) * 100));
   }
-
   return { grade: rank.grade, color: rank.color, percentage };
 }
 
-// 6. Main execution function
 async function main() {
   try {
     const stats = await fetchGitHubStats();
     const rankInfo = calculateRank(stats);
     
-    // Timestamp for force update
     const now = new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
     console.log(`Stats updated for ${stats.name} at ${now}`);
 
     const bgBase64 = encodeImage(path.join(__dirname, 'assets', 'BG.png'));
     const charBase64 = encodeImage(path.join(__dirname, 'assets', `char_${CHAR_TYPE}.png`));
-
     const radius = 40;
     const circumference = 2 * Math.PI * radius;
     const offset = circumference - (rankInfo.percentage / 100) * circumference;
@@ -153,38 +146,27 @@ async function main() {
         .circle-bg { fill: none; stroke: #333333; stroke-width: 8; }
         .circle-progress { fill: none; stroke: ${rankInfo.color}; stroke-width: 8; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dashoffset 1s ease-in-out; }
       </style>
-
       <image href="${bgBase64}" x="0" y="0" width="600" height="200" />
       <image href="${charBase64}" x="30" y="-75" width="360" height="360" />
-
       <text x="180" y="35" class="title">${stats.name}'s Stats</text>
-      
       <text x="180" y="70" class="label">Total Commits</text>
       <text x="320" y="70" class="value">${stats.commits}</text>
-
       <text x="180" y="95" class="label">Current Streak</text>
       <text x="320" y="95" class="value">${stats.streak} days 🔥</text>
-
       <text x="180" y="120" class="label">Total Stars</text>
       <text x="320" y="120" class="value">${stats.stars}</text>
-
       <text x="180" y="145" class="label">Total PRs</text>
       <text x="320" y="145" class="value">${stats.prs}</text>
-
       <text x="180" y="170" class="label">Years on GitHub</text>
       <text x="320" y="170" class="value">${stats.years} years</text>
-
       <g transform="translate(480, 100)">
         <circle cx="0" cy="0" r="${radius}" class="circle-bg" />
-        <circle cx="0" cy="0" r="${radius}" class="circle-progress" 
-                stroke-dasharray="${circumference}" 
-                stroke-dashoffset="${offset}" />
+        <circle cx="0" cy="0" r="${radius}" class="circle-progress" stroke-dasharray="${circumference}" stroke-dashoffset="${offset}" />
         <text x="0" y="2" class="grade">${rankInfo.grade}</text>
       </g>
     </svg>
     `;
 
-    // Save path handling (GitHub Workspace vs Local)
     const outputPath = process.env.GITHUB_WORKSPACE 
       ? path.join(process.env.GITHUB_WORKSPACE, 'stats.svg') 
       : 'stats.svg';
