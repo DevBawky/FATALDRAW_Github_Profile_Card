@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Generate Stats Card
-        uses: DevBawky/FATALDRAW_Github_Profile_Details@main
+        uses: ./
         with:
           username: DevBawky
           token: ${{ secrets.GH_TOKEN }}
