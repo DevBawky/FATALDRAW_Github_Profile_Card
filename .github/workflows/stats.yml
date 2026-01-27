@@ -17,7 +17,7 @@ jobs:
         uses: DevBawky/FATALDRAW_Github_Profile_Details@main
         with:
           username: ${{ github.repository_owner }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }}
           character: 'Rosalyn'
 
       - name: Push to Output Branch
