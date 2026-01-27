@@ -41,9 +41,9 @@ const STATS_BG_CONFIG = {
 };
 
 const STAMP_CONFIG = {
-  x: 460,     
+  x: 455,     
   y: 65,      
-  rotate: -20 
+  rotate: -25 
 };
 
 const BOUNTY_MULTIPLIER = {
@@ -60,17 +60,22 @@ const RANK_THRESHOLDS = [
   { score: 0,        grade: 'D',  color: '#455a64' },
 ];
 
-const FONT_URL = "https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap";
+function loadFileAsBase64(filePath) {
+  try {
+    const fileBuffer = fs.readFileSync(filePath);
+    return fileBuffer.toString('base64');
+  } catch (err) {
+    console.error(`Error: File not found at ${filePath}`);
+    return null;
+  }
+}
 
 function encodeImage(filePath) {
-  try {
-    const bitmap = fs.readFileSync(filePath);
-    const ext = path.extname(filePath).slice(1);
-    return `data:image/${ext};base64,${bitmap.toString('base64')}`;
-  } catch (err) {
-    console.error(`Error: Image not found at ${filePath}`);
-    return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
-  }
+  const base64 = loadFileAsBase64(filePath);
+  if (!base64) return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+  
+  const ext = path.extname(filePath).slice(1);
+  return `data:image/${ext};base64,${base64}`;
 }
 
 async function fetchImageAsBase64(url) {
@@ -162,7 +167,6 @@ async function main() {
     const stats = await fetchGitHubStats();
     
     let rawBounty = (stats.commits * BOUNTY_MULTIPLIER.perCommit) + (stats.stars * BOUNTY_MULTIPLIER.perStar);
-    
     const rankInfo = calculateRank(rawBounty);
 
     if (rawBounty > 99999999) {
@@ -178,7 +182,22 @@ async function main() {
     const posterBase64 = encodeImage(path.join(__dirname, 'assets', 'WANTED_POSTER.png'));
     const avatarBase64 = await fetchImageAsBase64(stats.avatarUrl);
 
-    const escapedFontUrl = FONT_URL.replace(/&/g, '&amp;');
+    const fontPath = path.join(__dirname, 'assets', 'PressStart2P-Regular.ttf');
+    const fontBase64 = loadFileAsBase64(fontPath);
+    
+    let fontFaceCSS = '';
+    if (fontBase64) {
+        fontFaceCSS = `
+            @font-face {
+                font-family: 'Press Start 2P';
+                src: url(data:font/ttf;base64,${fontBase64}) format('truetype');
+                font-weight: normal;
+                font-style: normal;
+            }
+        `;
+    } else {
+        console.warn("Warning: Font file not found. Text may not render correctly.");
+    }
 
     const svgContent = `
     <svg width="600" height="200" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
@@ -200,13 +219,13 @@ async function main() {
         </filter>
 
         <style type="text/css">
-          @import url('${escapedFontUrl}');
+          ${fontFaceCSS}
         </style>
       </defs>
 
       <style>
         .title, .label, .value, .bounty-text, .dead-alive, .stamp-text {
-            font-family: 'Press Start 2P', cursive;
+            font-family: 'Press Start 2P', monospace, sans-serif; /* fallback 추가 */
         }
 
         .title, .label, .value {
