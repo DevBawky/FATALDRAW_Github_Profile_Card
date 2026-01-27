@@ -1,0 +1,25 @@
+{
+  "name": "fataldraw_github_profile_details",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DevBawky/FATALDRAW_Github_Profile_Details.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DevBawky/FATALDRAW_Github_Profile_Details/issues"
+  },
+  "homepage": "https://github.com/DevBawky/FATALDRAW_Github_Profile_Details#readme",
+  "description": "",
+  "dependencies": {
+    "@actions/core": "^2.0.2",
+    "axios": "^1.13.3",
+    "dotenv": "^17.2.3"
+  }
+}

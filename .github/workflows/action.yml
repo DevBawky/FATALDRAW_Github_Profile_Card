@@ -1,0 +1,17 @@
+name: 'Pixel Art Stats Card'
+description: 'Generates a pixel art GitHub stats card with a character.'
+author: 'Bawky'
+inputs:
+  username:
+    description: 'GitHub Username to fetch stats for'
+    required: true
+  token:
+    description: 'GitHub Personal Access Token (PAT)'
+    required: true
+  character:
+    description: 'Character theme (Juno, Rosalyn)'
+    required: false
+    default: 'Juno'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
