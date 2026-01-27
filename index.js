@@ -1,14 +1,31 @@
+// 1. dotenv 설정: .env 파일이 있으면 로드, 없으면(GitHub Actions 등) 무시하고 지나감
+require('dotenv').config();
+
 const core = require('@actions/core');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 
-// 1. Get inputs
-const USERNAME = core.getInput('username');
-const TOKEN = core.getInput('token');
-const CHAR_TYPE = core.getInput('character') || 'Juno';
+// 2. Get inputs (수정됨)
+// 우선순위:
+// 1) Action Inputs (INPUT_USERNAME 등)
+// 2) 환경 변수 (USERNAME, GH_TOKEN 등 - .env나 시스템 설정)
+const USERNAME = core.getInput('username') || process.env.USERNAME || process.env.INPUT_USERNAME;
+const CHAR_TYPE = core.getInput('character') || process.env.CHARACTER || 'Juno';
 
-// 2. Rank thresholds
+// 토큰 처리 핵심 로직:
+// core.getInput('token') -> GitHub Actions의 'with: token' 값을 가져옴 (INPUT_TOKEN)
+// process.env.GH_TOKEN -> 로컬이나 시스템 환경 변수로 설정된 GH_TOKEN
+// process.env.GITHUB_TOKEN -> GitHub이 기본 제공하는 토큰
+const TOKEN = core.getInput('token') || process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
+
+if (!TOKEN) {
+  console.error("Error: No GitHub Token found.");
+  console.error("Please set 'token' in action input or 'GH_TOKEN' in environment variables.");
+  process.exit(1);
+}
+
+// 3. Rank thresholds
 const RANK_THRESHOLDS = [
   { score: 2000, grade: 'S+', color: '#ffd700' }, 
   { score: 1000, grade: 'S',  color: '#00e676' }, 
@@ -58,6 +75,7 @@ async function fetchGitHubStats() {
 
   try {
     console.log(`Attempting to fetch stats for user: ${USERNAME}`);
+    console.log(`Using Token: ${TOKEN.substring(0, 4)}...`);
     
     const response = await axios.post(
       'https://api.github.com/graphql',
@@ -105,6 +123,10 @@ async function fetchGitHubStats() {
     };
   } catch (error) {
     console.error("Fetch Error Details:", error.message);
+    if (error.response) {
+        console.error("Status:", error.response.status);
+        console.error("Data:", error.response.data);
+    }
     throw new Error('Failed to fetch GitHub stats');
   }
 }
