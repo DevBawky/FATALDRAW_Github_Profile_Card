@@ -20,11 +20,16 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
           character: 'Rosalyn'
 
+      - name: Move to dist
+        run: |
+          mkdir -p dist
+          mv stats.svg dist/
+
       - name: Push to Output Branch
         uses: crazy-max/ghaction-github-pages@v3
         with:
           target_branch: output
-          build_dir: .
+          build_dir: dist
           keep_history: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
