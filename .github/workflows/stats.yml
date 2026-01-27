@@ -16,7 +16,7 @@ jobs:
       - name: Generate Stats Card
         uses: DevBawky/FATALDRAW_Github_Profile_Details@main
         with:
-          username: ${{ github.repository_owner }}
+          username: DevBawky
           token: ${{ secrets.GH_TOKEN }}
           character: 'Rosalyn'
 
