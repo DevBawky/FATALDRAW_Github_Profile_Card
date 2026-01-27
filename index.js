@@ -171,8 +171,12 @@ async function main() {
     </svg>
     `;
 
-    fs.writeFileSync('stats.svg', svgContent);
-    console.log("Stats SVG generated successfully.");
+    const outputPath = process.env.GITHUB_WORKSPACE 
+      ? path.join(process.env.GITHUB_WORKSPACE, 'stats.svg') 
+      : 'stats.svg';
+
+    fs.writeFileSync(outputPath, svgContent);
+    console.log(`Stats SVG generated successfully at ${outputPath}`);
     
   } catch (error) {
     core.setFailed(error.message);
