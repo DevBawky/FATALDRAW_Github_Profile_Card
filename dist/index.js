@@ -36484,7 +36484,7 @@ if (inputChar.toLowerCase() === 'rosalyn') {
 } else {
     inputChar = 'Juno';
 }
-const CHAR_TYPE = (/* unused pure expression or super */ null && (inputChar));
+const CHAR_TYPE = inputChar;
 
 const USERNAME = core.getInput('username') || process.env.USERNAME || process.env.INPUT_USERNAME;
 const TOKEN = core.getInput('token') || process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
@@ -36528,7 +36528,7 @@ const STAMP_CONFIG = {
 
 const BOUNTY_MULTIPLIER = {
   perCommit: 10000,
-  perStar: 75000
+  perStar: 100000
 };
 
 const RANK_THRESHOLDS = [
@@ -36657,13 +36657,13 @@ async function main() {
     const now = new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
     console.log(`Stats updated for ${stats.name} at ${now} | Grade: ${rankInfo.grade}`);
 
-    const bgBase64 = encodeImage(__nccwpck_require__.ab + "BG.png");
-    const charBase64 = encodeImage(__nccwpck_require__.ab + "char_Juno.png");
-    const posterBase64 = encodeImage(__nccwpck_require__.ab + "WANTED_POSTER.png");
+    const bgBase64 = encodeImage(path.join(__dirname, 'assets', 'BG.png'));
+    const charBase64 = encodeImage(path.join(__dirname, 'assets', `char_${CHAR_TYPE}.png`));
+    const posterBase64 = encodeImage(path.join(__dirname, 'assets', 'WANTED_POSTER.png'));
     const avatarBase64 = await fetchImageAsBase64(stats.avatarUrl);
 
-    const fontPath = __nccwpck_require__.ab + "PressStart2P-Regular.ttf";
-    const fontBase64 = loadFileAsBase64(__nccwpck_require__.ab + "PressStart2P-Regular.ttf");
+    const fontPath = path.join(__dirname, 'assets', 'PressStart2P-Regular.ttf');
+    const fontBase64 = loadFileAsBase64(fontPath);
     
     let fontFaceCSS = '';
     if (fontBase64) {

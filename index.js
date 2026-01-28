@@ -55,7 +55,7 @@ const STAMP_CONFIG = {
 
 const BOUNTY_MULTIPLIER = {
   perCommit: 10000,
-  perStar: 75000
+  perStar: 100000
 };
 
 const RANK_THRESHOLDS = [
