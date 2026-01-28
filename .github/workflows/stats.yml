@@ -1,4 +1,4 @@
-name: Update Stats Card
+name: Update Stats Poster
 
 on:
   schedule:
@@ -10,14 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    
     steps:
       - uses: actions/checkout@v3
 
-      - name: Generate Stats Card
-        uses: ./
+      - name: Generate Wanted Poster
+        uses: DevBawky/FATALDRAW_Github_Profile_Card@main
         with:
-          username: DevBawky
-          token: ${{ secrets.GH_TOKEN }}
+          username: ${{ github.repository_owner }}
+          token: ${{ secrets.GITHUB_TOKEN }} 
           character: 'Rosalyn'
 
       - name: Move to dist
