@@ -87,16 +87,16 @@
       <text x="180" y="40" class="title">Bawky's Stats</text>
       
       <text x="180" y="75" class="label">Total Commits</text>
-      <text x="340" y="75" class="value">614</text>
+      <text x="340" y="75" class="value">338</text>
       
       <text x="180" y="100" class="label">Current Streak</text>
-      <text x="340" y="100" class="value">31 days</text>
+      <text x="340" y="100" class="value">32 days</text>
       
       <text x="180" y="125" class="label">Total Stars</text>
       <text x="340" y="125" class="value">145</text>
       
       <text x="180" y="150" class="label">Total PRs</text>
-      <text x="340" y="150" class="value">323</text>
+      <text x="340" y="150" class="value">46</text>
       
       <text x="180" y="175" class="label">Years on GitHub</text>
       <text x="340" y="175" class="value">8 years</text>
@@ -115,7 +115,7 @@
       </g>
 
       <text x="491" y="155" class="dead-alive">DEAD OR ALIVE</text>
-      <text x="491" y="172" class="bounty-text">$ 17,015,000</text>
+      <text x="491" y="172" class="bounty-text">$ 17,880,000</text>
 
     </svg>
     
