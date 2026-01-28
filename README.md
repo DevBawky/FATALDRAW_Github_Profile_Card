@@ -3,7 +3,9 @@
 # 🤠 FATALDRAW Profile Card
 
 <div align="center">
-    <img src="https://raw.githubusercontent.com/DevBawky/FATALDRAW_Github_Profile_Card/output/stats.svg" width="600" alt="preview"> 
+    <a href="https://github.com/DevBawky">
+        <img src="https://raw.githubusercontent.com/DevBawky/DevBawky/output/stats.svg" width="600" alt="preview"> 
+    </a>
 </div>
 
 <details>
