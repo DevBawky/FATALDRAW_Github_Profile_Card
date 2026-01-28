@@ -9,7 +9,7 @@
 </div>
 
 <details>
-<summary>KOR</summary>
+<summary><h2>KOR</h2></summary>
 
 당신의 깃허브 활동 내역을 __`FATALDRAW식 현상수배 포스터`__ 스타일의 픽셀 아트로 만들어주는 액션입니다.<br>
 커밋, 스타, PR 수에 따라 당신의 __`현상금(Bounty)`__ 이 책정되고, 그에 맞는 __`위험 등급(Rank)`__ 도장이 찍힙니다!
@@ -32,7 +32,7 @@
 복잡한 설정 없이 바로 적용해 보세요!
 
 ### 1단계: 워크플로우 파일 만들기
-1. 본인의 리포지토리에서 `.github/workflows` 폴더로 이동합니다. (없으면 만드세요)
+1. 본인의 리포지토리에서 `.github/workflows` 폴더로 이동합니다. (없으면 생성해주세요)
 2. `profile-card.yml` 파일을 새로 만들고 아래 코드를 그대로 복사해 붙여넣습니다.
 
 ```yaml
@@ -151,7 +151,7 @@ __`Actions`__ 탭에서 __`Run workflow`__ 를 눌러 수 동으로 실행해주
 
 
 <details open>
-<summary>EN</summary>
+<summary><h2>EN</h2></summary>
 
 This GitHub Action turns your GitHub activity into a __`FATALDRAW-style wanted poster`__ rendered in pixel art.<br>
 Based on your commits, stars, and pull requests, your personal __`Bounty`__ is calculated and stamped with a matching __`Danger Rank`__!
