@@ -1,12 +1,19 @@
-require('dotenv').config();
-
 const core = require('@actions/core');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 
+
+let inputChar = core.getInput('character') || process.env.CHARACTER || 'Juno';
+
+if (inputChar.toLowerCase() === 'rosalyn') {
+    inputChar = 'Rosalyn';
+} else {
+    inputChar = 'Juno';
+}
+const CHAR_TYPE = inputChar;
+
 const USERNAME = core.getInput('username') || process.env.USERNAME || process.env.INPUT_USERNAME;
-const CHAR_TYPE = core.getInput('character') || process.env.CHARACTER || 'Juno';
 const TOKEN = core.getInput('token') || process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
 
 if (!TOKEN) {
