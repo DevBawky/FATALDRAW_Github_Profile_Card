@@ -206,6 +206,19 @@ async function main() {
         console.warn("Warning: Font file not found. Text may not render correctly.");
     }
 
+    const titleText = `${stats.name}'s Stats`;
+    let titleFontSize = 16;
+
+    if (titleText.length > 15) {
+        titleFontSize = 14;
+    }
+    if (titleText.length > 20) {
+        titleFontSize = 12;
+    }
+    if (titleText.length > 25) {
+        titleFontSize = 10;
+    }
+
     const svgContent = `
     <svg width="600" height="200" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -232,7 +245,7 @@ async function main() {
 
       <style>
         .title, .label, .value, .bounty-text, .dead-alive, .stamp-text {
-            font-family: 'Press Start 2P', monospace, sans-serif; /* fallback 추가 */
+            font-family: 'Press Start 2P', monospace, sans-serif;
         }
 
         .title, .label, .value {
@@ -241,8 +254,9 @@ async function main() {
 
         .title { 
             fill: #ffffff; 
-            font-size: 16px; 
+            font-size: ${titleFontSize}px; 
             font-weight: bold; 
+            text-anchor: middle;
         }
         .label { 
             fill: #ffd54f; 
@@ -285,7 +299,7 @@ async function main() {
 
       <image href="${charBase64}" x="30" y="-75" width="360" height="360" />
       
-      <text x="180" y="40" class="title">${stats.name}'s Stats</text>
+      <text x="290" y="40" class="title">${titleText}</text>
       
       <text x="180" y="75" class="label">Total Commits</text>
       <text x="340" y="75" class="value">${stats.commits}</text>
