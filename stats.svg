@@ -90,10 +90,10 @@
       <text x="340" y="75" class="value">362</text>
       
       <text x="180" y="100" class="label">Current Streak</text>
-      <text x="340" y="100" class="value">151 days</text>
+      <text x="340" y="100" class="value">152 days</text>
       
       <text x="180" y="125" class="label">Total Stars</text>
-      <text x="340" y="125" class="value">179</text>
+      <text x="340" y="125" class="value">180</text>
       
       <text x="180" y="150" class="label">Total PRs</text>
       <text x="340" y="150" class="value">66</text>
@@ -115,7 +115,7 @@
       </g>
 
       <text x="491" y="155" class="dead-alive">DEAD OR ALIVE</text>
-      <text x="491" y="172" class="bounty-text">$ 21,520,000</text>
+      <text x="491" y="172" class="bounty-text">$ 21,620,000</text>
 
     </svg>
     
