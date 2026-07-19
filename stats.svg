@@ -90,13 +90,13 @@
       <text x="340" y="75" class="value">342</text>
       
       <text x="180" y="100" class="label">Current Streak</text>
-      <text x="340" y="100" class="value">203 days</text>
+      <text x="340" y="100" class="value">204 days</text>
       
       <text x="180" y="125" class="label">Total Stars</text>
       <text x="340" y="125" class="value">201</text>
       
       <text x="180" y="150" class="label">Total PRs</text>
-      <text x="340" y="150" class="value">71</text>
+      <text x="340" y="150" class="value">72</text>
       
       <text x="180" y="175" class="label">Years on GitHub</text>
       <text x="340" y="175" class="value">8 years</text>
