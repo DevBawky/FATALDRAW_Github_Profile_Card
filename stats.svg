@@ -90,13 +90,13 @@
       <text x="340" y="75" class="value">716</text>
       
       <text x="180" y="100" class="label">Current Streak</text>
-      <text x="340" y="100" class="value">229 days</text>
+      <text x="340" y="100" class="value">230 days</text>
       
       <text x="180" y="125" class="label">Total Stars</text>
-      <text x="340" y="125" class="value">202</text>
+      <text x="340" y="125" class="value">203</text>
       
       <text x="180" y="150" class="label">Total PRs</text>
-      <text x="340" y="150" class="value">91</text>
+      <text x="340" y="150" class="value">92</text>
       
       <text x="180" y="175" class="label">Years on GitHub</text>
       <text x="340" y="175" class="value">8 years</text>
@@ -115,7 +115,7 @@
       </g>
 
       <text x="491" y="155" class="dead-alive">DEAD OR ALIVE</text>
-      <text x="491" y="172" class="bounty-text">$ 27,360,000</text>
+      <text x="491" y="172" class="bounty-text">$ 27,460,000</text>
 
     </svg>
     
