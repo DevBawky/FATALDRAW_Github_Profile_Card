@@ -87,10 +87,10 @@
       <text x="180" y="40" class="title">Bawky's Stats</text>
       
       <text x="180" y="75" class="label">Total Commits</text>
-      <text x="340" y="75" class="value">774</text>
+      <text x="340" y="75" class="value">777</text>
       
       <text x="180" y="100" class="label">Current Streak</text>
-      <text x="340" y="100" class="value">248 days</text>
+      <text x="340" y="100" class="value">249 days</text>
       
       <text x="180" y="125" class="label">Total Stars</text>
       <text x="340" y="125" class="value">211</text>
@@ -115,7 +115,7 @@
       </g>
 
       <text x="491" y="155" class="dead-alive">DEAD OR ALIVE</text>
-      <text x="491" y="172" class="bounty-text">$ 28,840,000</text>
+      <text x="491" y="172" class="bounty-text">$ 28,870,000</text>
 
     </svg>
     
